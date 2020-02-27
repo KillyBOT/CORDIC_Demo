@@ -41,66 +41,60 @@ double c_mag(struct cnum c){
   r.r = 1;
   r.i = 1;
 
-  print_cnum(c);
-
   for(int x = 0; x < MAX_ITER; x++){
     if(c.i > 0) c = c_mult(c,c_conj(r));
-    else c = c_mult(c,r);
+    else if(c.i < 0)c = c_mult(c,r);
+    else return c.r / cord_mag(x);
 
     r.i /= 2;
-    print_cnum(c);
   }
 
-  print_cnum(r);
-
-  return c.r / cord_mag();
+  return c.r / cord_mag(MAX_ITER);
 }
 
 double c_phase(struct cnum c){
   struct cnum r = {0,1}; //Rotation
   double phase = 0;
-  double phaseToAdd = 90;
 
   if(c.i > 0){
     c = c_mult(c,c_conj(r));
-    phase += phaseToAdd;
+    phase += 90;
   }
   else {
     c = c_mult(c,r);
-    phase -= phaseToAdd;
+    phase -= 90;
   }
-
-  phaseToAdd /= 2;
+  print_cnum(c);
 
   r.r = 1;
-  r.i = 1;
-
-  //print_cnum(c);
 
   for(int x = 0; x < MAX_ITER; x++){
+    printf("%lf\n", phase);
     if(c.i > 0){
       c = c_mult(c,c_conj(r));
-      phase += phaseToAdd;
+      phase += 45 * r.i;
     }
     else {
       c = c_mult(c,r);
-      phase -= phaseToAdd;
+      phase -= 45 * r.i;
     }
 
-    phaseToAdd /= 2;
     r.i /= 2;
+
+    print_cnum(c);
   }
 
   return phase;
 }
 
-double cord_mag(){
+double cord_mag(int iter){
   double mag = 1;
   double phase = 45;
+  if(iter > MAX_ITER) iter = MAX_ITER;
 
   struct cnum c = {1,1};
 
-  for(int x = 0; x < MAX_ITER; x++){
+  for(int x = 0; x < iter; x++){
     //printf("Iter: %d\nPhase: %f\n", x + 1, phase);
     //print_cnum(c);
 
