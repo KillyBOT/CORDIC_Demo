@@ -15,7 +15,7 @@ int main(int argc, char* argv[]){
 
   //printf("%f\n", cord_mag());
 
-  printf("%.8f %.8f\n",c_mag(a),c_phase(a));
+  printf("%.8f %.8f\n",c_mag(b),c_phase(b));
 
 }
 
@@ -55,33 +55,54 @@ double c_mag(struct cnum c){
 double c_phase(struct cnum c){
   struct cnum r = {0,1}; //Rotation
   double phase = 0;
+  double temp;
+  double atan_table[16] = {
+    45,
+    26.56505118,
+    14.03624347,
+    7.12501635,
+    3.57633437,
+    1.78991061,
+    0.89517371,
+    0.44761417,
+    0.2238105,
+    0.11190568,
+    0.05595289,
+    0.02797645,
+    0.01398823,
+    0.00699411,
+    0.00349706,
+    0.00174853};
 
   if(c.i > 0){
     c = c_mult(c,c_conj(r));
     phase += 90;
   }
-  else {
+  else if (c.i < 0){
     c = c_mult(c,r);
     phase -= 90;
+  } else {
+    return 0;
   }
-  print_cnum(c);
 
   r.r = 1;
 
   for(int x = 0; x < MAX_ITER; x++){
     printf("%lf\n", phase);
+    print_cnum(c);
     if(c.i > 0){
       c = c_mult(c,c_conj(r));
-      phase += 45 * r.i;
+      phase += atan_table[x];
     }
-    else {
+    else if(c.i < 0){
       c = c_mult(c,r);
-      phase -= 45 * r.i;
+      phase -= atan_table[x];
+    } else {
+      return phase;
     }
 
     r.i /= 2;
 
-    print_cnum(c);
   }
 
   return phase;
@@ -90,7 +111,6 @@ double c_phase(struct cnum c){
 double cord_mag(int iter){
   double mag = 1;
   double phase = 45;
-  if(iter > MAX_ITER) iter = MAX_ITER;
 
   struct cnum c = {1,1};
 
@@ -106,6 +126,61 @@ double cord_mag(int iter){
   }
 
   return mag;
+}
+
+double c_sine(double theta){
+  struct cnum; //Rotation
+  double phase;
+  double temp;
+  double atan_table[16] = {
+    45,
+    26.56505118,
+    14.03624347,
+    7.12501635,
+    3.57633437,
+    1.78991061,
+    0.89517371,
+    0.44761417,
+    0.2238105,
+    0.11190568,
+    0.05595289,
+    0.02797645,
+    0.01398823,
+    0.00699411,
+    0.00349706,
+    0.00174853};
+
+  if(theta > 90){
+    phase = 90;
+  }
+  else if (theta < 90){
+    c = c_mult(c,r);
+    phase = -90;
+  } else {
+    return 0;
+  }
+
+  r.r = 1;
+
+  for(int x = 0; x < MAX_ITER; x++){
+    printf("%lf\n", phase);
+    print_cnum(c);
+    if(c.i > 0){
+      c = c_mult(c,c_conj(r));
+      phase += atan_table[x];
+    }
+    else if(c.i < 0){
+      c = c_mult(c,r);
+      phase -= atan_table[x];
+    } else {
+      return phase;
+    }
+
+    r.i /= 2;
+
+  }
+
+  return phase;
 }
 
 void print_cnum(struct cnum c){
