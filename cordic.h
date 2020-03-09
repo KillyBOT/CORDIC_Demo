@@ -10,8 +10,10 @@ struct cnum c_mult(struct cnum a, struct cnum b); //Multiply two complex numbers
 struct cnum c_conj(struct cnum c); //Get the conjugate of a complex number
 double c_mag(struct cnum c); //Find the magnitude of a complex number
 double c_phase(struct cnum c); //Find the phase (angle) of a complex number
+
 double sine(double theta);
 double cosine(double theta);
+double tangent(double theta);
 
 double cord_mag(int iter); //Just to test the exact value of the CORDIC gain
 
