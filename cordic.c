@@ -11,14 +11,9 @@ int main(int argc, char* argv[]){
   struct cnum a = {1,2};
   struct cnum b = {2,1};
 
-  //print_cnum(c_mult(a,b));
-  //print_cnum(c_conj(a));
-
-  printf("%.16f\n", cord_mag(MAX_ITER));
-
-  //printf("%.8f %.8f\n",c_mag(b),c_phase(b));
-  printf("%f\n", sine(30));
-  printf("%f\n", cosine(30));
+  for(int x = 0; x < 360; x++){
+    printf("%d %f %f\n", x, sine(x), cosine(x));
+  }
 
 }
 
@@ -175,6 +170,15 @@ double cord_mag(int iter){
 }
 
 double sine(double theta){
+
+  if(theta >= 360){
+    return sine(theta - 360);
+  } else if(theta <= -360){
+    return sine(theta + 360);
+  } else if(theta > 180 && theta < 360){
+    return -sine(theta - 180);
+  }
+
   struct cnum c;
   struct cnum r = {1,1}; //Rotation
   double phase = 0;
@@ -261,11 +265,9 @@ double sine(double theta){
       c = c_mult(c,r);
       phase += atan_table[x];
     }
-    else if(theta < phase){
+    else {
       c = c_mult(c,c_conj(r));
       phase -= atan_table[x];
-    } else {
-      return c.i * (cord_mag(x));
     }
 
     r.i /= 2;
@@ -276,6 +278,15 @@ double sine(double theta){
 }
 
 double cosine(double theta){
+
+  if(theta >= 360){
+    return cosine(theta - 360);
+  } else if(theta <= -360){
+    return cosine(theta + 360);
+  } else if(theta > 180 && theta < 360){
+    return -cosine(theta - 180);
+  }
+
   struct cnum c;
   struct cnum r = {1,1}; //Rotation
   double phase = 0;
