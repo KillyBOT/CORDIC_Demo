@@ -373,11 +373,9 @@ double cosine(double theta){
       c = c_mult(c,r);
       phase += atan_table[x];
     }
-    else if(theta < phase){
+    else{
       c = c_mult(c,c_conj(r));
       phase -= atan_table[x];
-    } else {
-      return c.r * (cord_mag(x));
     }
 
     r.i /= 2;
